@@ -9,4 +9,3 @@ class NoteSerializer(serializers.ModelSerializer):
             'text',
             'created_at',
         ]
-        
