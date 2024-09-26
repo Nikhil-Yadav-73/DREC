@@ -35,7 +35,7 @@ class UserProfile(models.Model):
     pfp = models.ImageField(upload_to='user_pfp', blank=True, null=True)
     liked_posts = models.ManyToManyField(Post, related_name='liked_by_users', blank=True)
     phone = models.CharField(max_length=15, default='1234567890')
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False) 
     
     def __str__(self):
         return self.user.username
