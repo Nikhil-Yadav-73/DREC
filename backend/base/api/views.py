@@ -5,8 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from base.models import Note
-from .serializers import NoteSerializer
+from base.models import Note, Item, Cart, CartItem, Category
+from .serializers import NoteSerializer, ItemSerializer, CategorySerializer
+from rest_framework import generics
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -35,3 +36,13 @@ def getnotes(request):
     notes = Note.objects.filter(user=request.user)
     serializer = NoteSerializer(notes, many=True)
     return Response(serializer.data)
+
+# Core
+
+class ItemListView(generics.ListCreateAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
