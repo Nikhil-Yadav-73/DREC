@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 import uuid
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
-from phonenumber_field.formfields import PhoneNumberField
 
 now = timezone.now() 
   
