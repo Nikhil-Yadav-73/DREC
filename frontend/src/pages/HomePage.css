@@ -1,0 +1,106 @@
+.carousel-container {
+    margin: 0 auto;
+    width: 90%; /* Adjust the width according to your needs */
+    overflow: hidden;
+  }
+  
+  .custom-carousel .carousel-inner {
+    display: flex;
+  }
+  
+  .custom-carousel .carousel-item {
+    display: flex;
+    justify-content: space-around; /* Ensure equal spacing between cards */
+    padding-left: 50px;
+    padding-right:50px;
+    margin-left:20px;
+    margin-right:20px;
+  }
+  
+  .card-group {
+    display: flex;
+    justify-content: space-between; /* Space between the cards in the same group */
+    width: 100%;
+  }
+  
+  .custom-carousel .carousel-control-prev,
+  .custom-carousel .carousel-control-next {
+    display: block;
+  }
+  
+  .custom-carousel .carousel-control-prev-icon,
+  .custom-carousel .carousel-control-next-icon {
+    background-color: rgba(0,0,0,0.5); /*arrows*/
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
+  .custom-carousel .carousel-control-prev {
+    margin-left: -100px;
+  }
+  
+  .custom-carousel .carousel-control-next {
+    margin-right: -100px; 
+  }
+  
+
+  .carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90%;
+    margin: 0 auto;
+    overflow: hidden;
+    position: relative;
+    margin-top: 50px;
+    margin-bottom: 30px;
+  }
+  
+  .card-group {
+    display: flex;
+    gap: 20px; /* Space between cards */
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+  }
+  
+  .custom-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%; /* Make sure cards take up all available height */
+  }
+  
+  .custom-card img {
+    height: 180px; /* Set fixed height for images to make them uniform */
+    object-fit: cover; /* Ensures images fit within the space without distortion */
+  }
+  
+  .custom-card .card-body {
+    flex-grow: 1; /* Ensures the card content fills the remaining space */
+  }
+  
+  .custom-card .list-group-flush {
+    margin-top: auto; /* Push list group items to the bottom */
+  }
+  
+  .carousel-control-prev,
+  .carousel-control-next {
+    background-color: rgba(0, 0, 0, 0);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    padding: 10px;
+  }
+  
+  .carousel-control-prev {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+  }
+  
+  .carousel-control-next {
+    position: absolute;
+    right: 0;
+    z-index: 1;
+  }

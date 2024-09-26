@@ -1,12 +1,16 @@
+import AuthContext from '../context/AuthContext';
+import React, { useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
 import '../App.css';
 
 function MyNavbar() {
+  const { user, logoutUser } = useContext(AuthContext);
   return (
     <Navbar expand="lg" className="drkx">
       <Container fluid>
@@ -20,7 +24,7 @@ function MyNavbar() {
           >
             <Nav.Link href="#" className='tw'>Home</Nav.Link>
             <NavDropdown title="Options" className='tw' id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
+              <NavDropdown.Item href="#action3" >{user ? (<p onClick={logoutUser}>Logout</p>) : (<Link to="/login">Login</Link>)}</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
                 Another action
               </NavDropdown.Item>
