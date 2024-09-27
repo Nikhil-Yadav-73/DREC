@@ -1,0 +1,27 @@
+/* Footer.css */
+.footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    position: fixed; /* Stick the footer to the bottom */
+    bottom: 0;
+    left: 0;
+    width: 100%; /* Full width */
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between; /* Space between content */
+    align-items: center; /* Center items vertically */
+}
+
+.social-links a {
+    margin: 0 10px; /* Space between links */
+    color: #fff; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.social-links a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

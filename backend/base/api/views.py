@@ -7,7 +7,8 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from base.models import Note, Item, Cart, CartItem, Category
 from .serializers import NoteSerializer, ItemSerializer, CategorySerializer
-from rest_framework import generics
+from rest_framework.exceptions import NotFound
+from rest_framework import generics, status
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -43,6 +44,30 @@ class ItemListView(generics.ListCreateAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
+    def get_serializer_context(self):
+        return {'request': self.request}
+
+# @permission_classes([IsAuthenticated])
 class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
+    lookup_field = 'id'
+
+    def update(self, request, id, *args, **kwargs):
+        try:
+            item = Item.objects.get(id=id)
+            serializer = ItemSerializer(item, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()  # Save the updated item
+                return Response({"message": "Item updated successfully!", "item": serializer.data}, status=status.HTTP_205_RESET_CONTENT)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Item.DoesNotExist:
+            raise NotFound(detail="Item not found", code=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id, *args, **kwargs):
+        try:
+            item = Item.objects.get(id=id)
+            item.delete()
+            return Response({"message": "Item deleted successfully!"}, status=status.HTTP_204_NO_CONTENT)
+        except Item.DoesNotExist:
+            raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)
