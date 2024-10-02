@@ -10,6 +10,7 @@ urlpatterns = [
     path('token/refresh/', views.TokenRefreshView.as_view(), name='token_refresh'),
     path('items/', views.ItemListView.as_view(), name='item_list_view'),
     path('items/<int:id>', views.ItemDetailView.as_view(), name='items_detail'),
+    path('items/recommended/<int:id>', views.RecommendedItems.as_view(), name='recommended_items'),
     path('notes', views.getnotes),
 ]
 if settings.DEBUG:

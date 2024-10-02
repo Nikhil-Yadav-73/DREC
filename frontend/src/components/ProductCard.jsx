@@ -1,33 +1,15 @@
+import { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';
+import { Link } from 'react-router-dom';
 import './ProductCard.css';
-import { useState } from 'react';
 
-function ProductCard({ id, name, price, image, rating, reviews, link1, link2 }) {
-
-  // let [item, setItem] = useState([]);
-
-  // const getItem = async () => {
-  //   let response = await fetch(`http://127.0.0.1:8000/api/items/${id}`, {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': "application/json",
-  //       'Authorization': 'Bearer ' + String(authTokens.access)
-  //     }
-  //   });
-  //   let data = await response.json();
-  //   if (response.status === 200) {
-  //     setItem(data);
-  //   } else if (response.statusText === 'Unauthorized') {
-  //     logoutUser();
-  //   } else {
-  //     alert("Something went wrong! Try logging in again");
-  //   }
-  // };
-
+function ProductCard({ id, name, price, image, rating, reviews }) {
   return (
     <Card style={{ width: '18rem' }}>
-      <Card.Img variant="top" src={image}  alt={name} />
+      <Link to={`/product/${id}`}>
+        <Card.Img variant="top" src={image} alt={name} />
+      </Link>
       <Card.Body>
         <Card.Title>{name}</Card.Title>
       </Card.Body>
@@ -36,8 +18,9 @@ function ProductCard({ id, name, price, image, rating, reviews, link1, link2 }) 
         <ListGroup.Item>{`${rating} Stars, ${reviews} reviews`}</ListGroup.Item>
       </ListGroup>
       <Card.Body>
-        <Card.Link href={link1}>Card Link</Card.Link>
-        <Card.Link href={link2}>Another Link</Card.Link>
+        <Link to={`/product/${id}`} className="btn btn-primary">
+          View Product
+        </Link>
       </Card.Body>
     </Card>
   );

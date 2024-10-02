@@ -4,7 +4,7 @@ import MyNavbar from '../components/MyNavbar';
 import MyFooter from '../components/MyFooter';
 import ProductCard from '../components/ProductCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './HomePage.css';  // Import custom CSS
+import './HomePage.css'; 
 
 const HomePage = () => {
   let [notes, setNotes] = useState([]);

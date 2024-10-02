@@ -58,7 +58,7 @@ class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
             item = Item.objects.get(id=id)
             serializer = ItemSerializer(item, data=request.data, partial=True)
             if serializer.is_valid():
-                serializer.save()  # Save the updated item
+                serializer.save()
                 return Response({"message": "Item updated successfully!", "item": serializer.data}, status=status.HTTP_205_RESET_CONTENT)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except Item.DoesNotExist:
@@ -69,5 +69,26 @@ class ItemDetailView(generics.RetrieveUpdateDestroyAPIView):
             item = Item.objects.get(id=id)
             item.delete()
             return Response({"message": "Item deleted successfully!"}, status=status.HTTP_204_NO_CONTENT)
+        except Item.DoesNotExist:
+            raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)
+        
+class RecommendedItems(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    lookup_field = 'id'
+
+    def get(self, request, id, *args, **kwargs):
+        try:
+            # Fetch the item based on the provided id
+            item = Item.objects.get(id=id)
+            category = item.category
+            
+            # Get the recommended items from the same category
+            recommended_items = Item.objects.filter(category=category).exclude(id=id)[:4]
+            serializer = self.get_serializer(recommended_items, many=True)
+            
+            # Return the serialized data in the response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
         except Item.DoesNotExist:
             raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)

@@ -14,7 +14,7 @@ function MyNavbar() {
   return (
     <Navbar expand="lg" className="drkx">
       <Container fluid>
-        <Navbar.Brand href="#" className='tw'>Govindam Sarees</Navbar.Brand>
+        <Navbar.Brand href="?" className='tw'>Govindam Sarees</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
