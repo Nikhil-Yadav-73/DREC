@@ -6,6 +6,7 @@ import Header from './components/Header';
 import PrivateRoute from './utils/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import ItemDesc from './pages/ItemDesc';
+import Category from './pages/Category';
 
 function App() {
   const isAuthenticated = true;
@@ -18,7 +19,8 @@ function App() {
           <Routes>
             <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
               <Route path="/" element={<HomePage />} />
-              <Route path="/product/:id" element={<ItemDesc />} /> {/* Add this route */}
+              <Route path="/product/:id" element={<ItemDesc />} />
+              <Route path="/category/:name" element={<Category />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
           </Routes>

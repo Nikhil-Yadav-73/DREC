@@ -11,6 +11,8 @@ urlpatterns = [
     path('items/', views.ItemListView.as_view(), name='item_list_view'),
     path('items/<int:id>', views.ItemDetailView.as_view(), name='items_detail'),
     path('items/recommended/<int:id>', views.RecommendedItems.as_view(), name='recommended_items'),
+    path('categories/', views.CategoryListView.as_view(), name='category_list_view'),
+    path('categories/<str:name>', views.CategoryItemListView.as_view(), name='category_items_view'),
     path('notes', views.getnotes),
 ]
 if settings.DEBUG:

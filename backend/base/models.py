@@ -58,7 +58,7 @@ class Item(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)   
     quantity = models.PositiveIntegerField(default=1) 
     material = models.CharField(null=True, blank=True, max_length=50)
-    size = models.CharField(choices=sizes, max_length=15)            
+    size = models.CharField(choices=sizes, max_length=15, blank=True, null=True)            
     
     class Meta:
         ordering = ('created_at',)

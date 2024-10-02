@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom'; // You missed this import
+import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
 import ProductCard from '../components/ProductCard';
@@ -15,7 +15,6 @@ const ItemDesc = () => {
     const [selectedSize, setSelectedSize] = useState("");
 
     useEffect(() => {
-        // Fetch the item details
         const fetchItem = async () => {
             try {
                 const response = await axios.get(`http://localhost:8000/api/items/${id}`);

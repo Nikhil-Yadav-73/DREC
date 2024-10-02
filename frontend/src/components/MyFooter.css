@@ -25,3 +25,9 @@
 .social-links a:hover {
     text-decoration: underline; /* Underline on hover */
 }
+
+.catecard {
+    width: 30px !important;
+    border-radius: 8px;
+    color: white; 
+}

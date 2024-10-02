@@ -5,9 +5,10 @@ import MyFooter from '../components/MyFooter';
 import ProductCard from '../components/ProductCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomePage.css'; 
+import CategoryCard from '../components/CategoryCard';
 
 const HomePage = () => {
-  let [notes, setNotes] = useState([]);
+  let [categories, setCategories] = useState([]);
   let [homeItems, setHomeItems] = useState([]);
   let { authTokens, logoutUser } = useContext(AuthContext);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -15,7 +16,7 @@ const HomePage = () => {
 
 
   useEffect(() => {
-    getNotes();
+    getCategories();
   }, []);
 
   useEffect(() => {
@@ -40,8 +41,8 @@ const HomePage = () => {
     }
   };
 
-  const getNotes = async () => {
-    let response = await fetch("http://127.0.0.1:8000/api/notes", {
+  const getCategories = async () => {
+    let response = await fetch("http://localhost:8000/api/categories/", {
       method: 'GET',
       headers: {
         'Content-Type': "application/json",
@@ -50,7 +51,7 @@ const HomePage = () => {
     });
     let data = await response.json();
     if (response.status === 200) {
-      setNotes(data);
+      setCategories(data);
     } else if (response.statusText === 'Unauthorized') {
       logoutUser();
     } else {
@@ -78,25 +79,15 @@ const HomePage = () => {
           &#8249;
         </button>
         <div className="card-group">
-          {notes.slice(currentIndex, currentIndex + itemsPerPage).map(note => (
-            <ProductCard
-              key={note.id}
-              id={note.id}
-              name={note.text}
-              price={note.price}
-              image={note.image}
-              rating={note.rating}
-              reviews={note.reviews}
-              link1={note.link1}
-              link2={note.link2}
-            />
+          {categories.slice(currentIndex, currentIndex + itemsPerPage).map(category => (
+            <CategoryCard id={category.id} category={category.name}/>
           ))}
         </div>
         <button className="carousel-control-next" onClick={nextSlide}>
           &#8250;
         </button>
       </div>
-      <div className="">
+      <div className="product-grid card-group-homeitems">
           {homeItems.map(homeItem => (
             <ProductCard
               key={homeItem.id}

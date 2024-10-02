@@ -79,16 +79,31 @@ class RecommendedItems(generics.ListAPIView):
 
     def get(self, request, id, *args, **kwargs):
         try:
-            # Fetch the item based on the provided id
             item = Item.objects.get(id=id)
             category = item.category
-            
-            # Get the recommended items from the same category
             recommended_items = Item.objects.filter(category=category).exclude(id=id)[:4]
             serializer = self.get_serializer(recommended_items, many=True)
-            
-            # Return the serialized data in the response
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         except Item.DoesNotExist:
             raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)
+        
+class CategoryListView(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    lookup_field = 'id'
+
+class CategoryItemListView(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    lookup_field = 'id'
+
+    def get(self, request, name, *args, **Kwargs):
+        try:
+            category = Category.objects.get(name=name)
+            items = Item.objects.filter(category=category)
+            serializer = self.get_serializer(items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Category.DoesNotExist:
+            raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)
+        
