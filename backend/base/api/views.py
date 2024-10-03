@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from base.models import Note, Item, Cart, CartItem, Category
-from .serializers import NoteSerializer, ItemSerializer, CategorySerializer
+from base.models import Note, Item, Cart, CartItem, Category, UserProfile, User
+from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserProfileSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework import generics, status
 
@@ -106,4 +106,38 @@ class CategoryItemListView(generics.ListAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Category.DoesNotExist:
             raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)
+ 
+class CartView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CartItemSerializer
+
+    def get(self, request, id, *args, **kwargs):
+        try:
+            user = User.objects.get(id=id)
+            cart = Cart.objects.get(user=user)
+            cart_items = CartItem.objects.filter(cart=cart)
+            serializer = CartItemSerializer(cart_items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         
+        except Cart.DoesNotExist:
+            return Response({"detail": "Cart is Empty"}, status=status.HTTP_404_NOT_FOUND)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class UserProfileView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = UserProfile.objects.all()
+    serializer_class = UserProfileSerializer
+    lookup_field = 'id'
+
+    def get(self, request, id, *args, **kwargs):
+        try:
+            user = User.objects.get(id=id)
+            userprofile, created = UserProfile.objects.get_or_create(user=user)
+            serializer = self.get_serializer(userprofile)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        except User.DoesNotExist:
+            raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

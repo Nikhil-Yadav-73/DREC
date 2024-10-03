@@ -13,6 +13,8 @@ urlpatterns = [
     path('items/recommended/<int:id>', views.RecommendedItems.as_view(), name='recommended_items'),
     path('categories/', views.CategoryListView.as_view(), name='category_list_view'),
     path('categories/<str:name>', views.CategoryItemListView.as_view(), name='category_items_view'),
+    path('cart/<int:id>', views.CartView.as_view(), name='cart_view'), 
+    path('userprofile/<int:id>', views.UserProfileView.as_view(), name='user_profile'),
     path('notes', views.getnotes),
 ]
 if settings.DEBUG:

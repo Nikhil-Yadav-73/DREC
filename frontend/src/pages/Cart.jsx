@@ -10,15 +10,40 @@ import { FaTrash } from 'react-icons/fa';
 import CategoryCard from '../components/CategoryCard';
 
 const Cart = () => {
-    // Example cart state with item details
-    const [cartItems, setCartItems] = useState([
-        { id: 1, name: 'Item 1', price: 100, quantity: 1, image: 'item1.jpg' },
-        { id: 2, name: 'Item 2', price: 150, quantity: 2, image: 'item2.jpg' },
-    ]);
+    const [cartItems, setCartItems] = useState([]);
+    const [items, setItems] =useState([]);
     const [discountCode, setDiscountCode] = useState('');
-    const [shippingCharge] = useState(50); // Fixed shipping charge
+    const [shippingCharge] = useState(50);
+    const { user } = useContext(AuthContext);
+    const [userprofile, setUserProfile] = useState(null);
+    let { authTokens, logoutUser } = useContext(AuthContext);
 
-    // Handle quantity change
+
+    useEffect(() => {
+        getCartItems();
+    }, []);
+    
+
+    const getCartItems = async () => {
+        let response = await fetch(`http://localhost:8000/api/cart/${user.user_id}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': "application/json",
+            'Authorization': 'Bearer ' + String(authTokens.access)
+          }
+        });
+        let data = await response.json();
+        console.log("Cart Items Response Data:", data);
+    
+        if (response.status === 200) {
+          setCartItems(data);
+        } else if (response.status === 401) {
+          logoutUser();
+        } else {
+          alert("Something went wrong! Try logging in again");
+        }
+    };
+
     const updateQuantity = (id, increment) => {
         setCartItems(cartItems.map(item => 
             item.id === id
@@ -27,17 +52,30 @@ const Cart = () => {
         ));
     };
 
-    // Handle item deletion
     const removeItem = (id) => {
         setCartItems(cartItems.filter(item => item.id !== id));
     };
 
-    // Calculate total price and item count
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
-    const totalCartValue = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+
+    let totalCartValue = 0;
+    for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i];
+        console.log(item);
+        
+        const price = parseFloat(item.item.price);
+        const quantity = parseInt(item.item.quantity);
+        console.log(`price  ${price}, quantity ${quantity}`);
+
+        if (!isNaN(price) && !isNaN(quantity)) {
+            totalCartValue += price * quantity;
+        } else {
+            console.log(`Invalid values for item ${item.item.name}: Price - ${item.item.price}, Quantity - ${item.item.quantity}`);
+        }
+    }
+
     const grandTotal = totalCartValue + shippingCharge;
 
-    // Apply discount code (assuming a flat $20 discount for demo)
     const applyDiscount = () => {
         if (discountCode === 'DISCOUNT20') {
             alert('Discount applied: $20');
@@ -55,54 +93,54 @@ const Cart = () => {
                 <p>Your cart is empty</p>
             ) : (
                 <>
-                    {cartItems.map(item => (
-                        <Row key={item.id} className="align-items-center my-3 tw">
-                            <Col xs={2}>
-                                <img src={item.image} alt={item.name} className="img-fluid tw" />
-                            </Col>
-                            <Col xs={4}>
-                                <h5>{item.name}</h5>
-                            </Col>
-                            <Col xs={2}>
-                                <Form>
-                                    <div className="d-flex align-items-center tw">
-                                        <Button
-                                            variant="outline-secondary"
-                                            size="sm"
-                                            onClick={() => updateQuantity(item.id, -1)}
-                                        >
-                                            -
-                                        </Button>
-                                        <Form.Control
-                                            type="text"
-                                            value={item.quantity}
-                                            readOnly
-                                            className="text-center mx-2 tw"
-                                            style={{ width: '50px' }}
-                                        />
-                                        <Button
-                                            variant="outline-secondary"
-                                            size="sm"
-                                            onClick={() => updateQuantity(item.id, 1)}
-                                        >
-                                            +
-                                        </Button>
-                                    </div>
-                                </Form>
-                            </Col>
-                            <Col xs={2}>
-                                <h5>${item.price * item.quantity}</h5>
-                            </Col>
-                            <Col xs={2}>
-                                <Button
-                                    variant="danger"
-                                    onClick={() => removeItem(item.id)}
-                                >
-                                    <FaTrash />
-                                </Button>
-                            </Col>
-                        </Row>
-                    ))}
+                    {cartItems.map(cartItem => (
+    <Row key={cartItem.id} className="align-items-center my-3 tw">
+        <Col xs={2}>
+            <img src={cartItem.item.image} alt={cartItem.item.name} className="img-fluid tw" />
+        </Col>
+        <Col xs={4}>
+            <h5>{cartItem.item.name}</h5>
+        </Col>
+        <Col xs={2}>
+            <Form>
+                <div className="d-flex align-items-center tw">
+                    <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={() => updateQuantity(cartItem.id, -1)}
+                    >
+                        -
+                    </Button>
+                    <Form.Control
+                        type="text"
+                        value={cartItem.quantity}
+                        readOnly
+                        className="text-center mx-2 tw"
+                        style={{ width: '50px' }}
+                    />
+                    <Button
+                        variant="outline-secondary"
+                        size="sm"
+                        onClick={() => updateQuantity(cartItem.id, 1)}
+                    >
+                        +
+                    </Button>
+                </div>
+            </Form>
+        </Col>
+        <Col xs={2}>
+            <h5>${cartItem.item.price * cartItem.item.quantity}</h5>
+        </Col>
+        <Col xs={2}>
+            <Button
+                variant="danger"
+                onClick={() => removeItem(cartItem.id)}
+            >
+                <FaTrash />
+            </Button>
+        </Col>
+    </Row>
+))}
 
                     <Row className="mt-5">
                         <Col md={{ span: 4, offset: 4 }} className='mt-5'>

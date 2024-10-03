@@ -8,6 +8,7 @@ import { AuthProvider } from './context/AuthContext';
 import ItemDesc from './pages/ItemDesc';
 import Category from './pages/Category';
 import Cart from './pages/Cart';
+import ProfilePage from './pages/ProfilePage';
 
 function App() {
   const isAuthenticated = true;
@@ -23,6 +24,7 @@ function App() {
               <Route path="/product/:id" element={<ItemDesc />} />
               <Route path="/category/:name" element={<Category />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
           </Routes>

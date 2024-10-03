@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from base.models import Note, Item, Category
+from base.models import Note, Item, Category, Cart, CartItem, UserProfile
 
 class NoteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,24 +34,19 @@ class ItemSerializer(serializers.ModelSerializer):
         item = Item.objects.create(category=category, **validated_data)
         return item
     
-    # def update(self, instance, validated_data):
-    #     category_data = validated_data.pop('category', None)
-        
-    #     if category_data:
-    #         category_serializer = CategorySerializer(instance.category, data=category_data)
-    #         if category_serializer.is_valid():
-    #             category_serializer.save()
-    #         else:
-    #             raise serializers.ValidationError(category_serializer.errors)
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cart
+        fields = '__all__'
 
-    #     instance.name = validated_data.get('name', instance.name)
-    #     instance.description = validated_data.get('description', instance.description)
-    #     instance.price = validated_data.get('price', instance.price)
-    #     instance.image = validated_data.get('image', instance.image)
-    #     instance.video = validated_data.get('video', instance.video)
-    #     instance.quantity = validated_data.get('quantity', instance.quantity)
-    #     instance.material = validated_data.get('material', instance.material)
-    #     instance.size = validated_data.get('size', instance.size)
-        
-    #     instance.save()
-    #     return instance
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
+class CartItemSerializer(serializers.ModelSerializer):
+    item = ItemSerializer()
+
+    class Meta:
+        model = CartItem
+        fields = '__all__'
