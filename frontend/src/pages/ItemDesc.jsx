@@ -63,21 +63,23 @@ const ItemDesc = () => {
                     <p className='tw'><strong>Price:</strong> ${item.price}</p>
                     <p className='tw'><strong>Material:</strong> {item.material}</p>
                     <p className='tw'><strong>Category:</strong> {item.category.name}</p>
-                    <Form.Group controlId="sizeSelect">
-                        <Form.Label className='tw'>Select Size:</Form.Label>
-                        <Form.Control
+                    {item.category.name === 'kurti' && (
+                        <Form.Group controlId="sizeSelect">
+                            <Form.Label className='tw'>Select Size:</Form.Label>
+                            <Form.Control
                             as="select"
                             value={selectedSize}
                             onChange={(e) => setSelectedSize(e.target.value)}
-                        >
+                            >
                             <option value="">Select size</option>
                             <option value="small">Small</option>
                             <option value="medium">Medium</option>
                             <option value="large">Large</option>
                             <option value="xlarge">X-Large</option>
                             <option value="xxlarge">XX-Large</option>
-                        </Form.Control>
-                    </Form.Group>
+                            </Form.Control>
+                        </Form.Group>
+                    )}
                     <Button variant="primary" className="mt-3" onClick={handleAddToCart}>
                         Add to Cart
                     </Button>

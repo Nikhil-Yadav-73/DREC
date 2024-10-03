@@ -7,6 +7,7 @@ import PrivateRoute from './utils/PrivateRoute';
 import { AuthProvider } from './context/AuthContext';
 import ItemDesc from './pages/ItemDesc';
 import Category from './pages/Category';
+import Cart from './pages/Cart';
 
 function App() {
   const isAuthenticated = true;
@@ -21,6 +22,7 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/product/:id" element={<ItemDesc />} />
               <Route path="/category/:name" element={<Category />} />
+              <Route path="/cart" element={<Cart />} />
             </Route>
             <Route path="/login" element={<LoginPage />} />
           </Routes>
