@@ -55,6 +55,14 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
             country: userprofile ? userprofile.country : 'Bharat'
         });
     
+        
+    
+        const [formData, setFormData] = useState(profile);
+    
+        const handleChange = (e) => {
+            setFormData({ ...formData, [e.target.name]: e.target.value });
+        };
+    
         useEffect(() => {
             if (userprofile) {
                 setProfile({
@@ -66,21 +74,39 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                     state: userprofile.state || 'Rajasthan',
                     country: userprofile.country || 'Bharat'
                 });
+        
+                setFormData({
+                    name: user.username,
+                    email: user.email,
+                    phone: userprofile.phone || "+911 1234567890",
+                    city: userprofile.city || 'Jaipur',
+                    state: userprofile.state || 'Rajasthan',
+                    country: userprofile.country || 'Bharat'
+                });
             }
         }, [userprofile, user]);
-    
-        const [formData, setFormData] = useState(profile);
-    
-        const handleChange = (e) => {
-            setFormData({ ...formData, [e.target.name]: e.target.value });
-        };
-    
-        const handleSave = (e) => {
+        
+        const handleSave = async (e) => {
             e.preventDefault();
-            setProfile(formData);
-            alert('Profile updated successfully!');
+        
+            let response = await fetch(`http://localhost:8000/api/userprofile/${user.user_id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + String(authTokens.access)
+                },
+                body: JSON.stringify(formData)
+            });
+        
+            if (response.status === 200) {
+                // Fetch the updated profile
+                await getUserProfile();
+                alert('Profile updated successfully!');
+            } else {
+                alert('Error updating profile');
+            }
         };
-    
+
         return (
             <Container>
                 <MyNavbar />

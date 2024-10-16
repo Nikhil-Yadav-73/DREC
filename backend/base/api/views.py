@@ -143,6 +143,23 @@ class UserProfileView(generics.RetrieveAPIView):
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    def post(self, request, id, *args, **kwargs):
+        try:
+            user = User.objects.get(id=id)
+            userprofile, created = UserProfile.objects.get_or_create(user=user)
+            serializer = self.get_serializer(userprofile, data=request.data, partial=True)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        except User.DoesNotExist:
+            raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
+        
+        except Exception as e:
+            return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class Search(generics.ListAPIView):
     queryset = Item.objects.all()
