@@ -45,7 +45,6 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
             getUserProfile();
         }, []);
     
-        // Initialize profile data after userprofile is fetched
         const [profile, setProfile] = useState({
             profilePicture: userprofile ? userprofile.pfp : "default-image.png",
             name: user ? user.username : '',
@@ -57,7 +56,6 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
         });
     
         useEffect(() => {
-            // Update profile state when userprofile is fetched
             if (userprofile) {
                 setProfile({
                     profilePicture: userprofile.pfp || "default-image.png",
@@ -160,7 +158,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                             onChange={handleChange}
                                         />
                                     </Form.Group>
-                                    <Button variant="primary" type="submit">
+                                    <Button variant="primary" className='mt-2' type="submit">
                                         Save
                                     </Button>
                                 </Form>
@@ -169,7 +167,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                     </Col>
                 </Row>
     
-                <Row className="mt-5">
+                {/* <Row className="mt-5">
                     <Col>
                         <h4 className='tw'>Past Orders</h4>
                         <ListGroup>
@@ -184,7 +182,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                             ))}
                         </ListGroup>
                     </Col>
-                </Row>
+                </Row> */}
     
                 <br></br>
                 <br></br>

@@ -1,5 +1,5 @@
 import AuthContext from '../context/AuthContext';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
@@ -7,12 +7,38 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import '../App.css';
+import ProductCard from './ProductCard';
 
 function MyNavbar() {
-  const { user, logoutUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
+  let { authTokens, logoutUser } = useContext(AuthContext);
+  const [query, setQuery] = useState('');
+  const [searchItems, setSearchItems] = useState();
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+      let response = await fetch(`http://localhost:8000/api/items/search/?query=${query}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': "application/json",
+          'Authorization': 'Bearer ' + String(authTokens.access)
+        }
+      });
+      let data = await response.json();
+      if (response.status === 200) {
+        setSearchItems(data);
+      } else if (response.statusText === 'Unauthorized') {
+        logoutUser();
+      } else {
+        alert("Something went wrong! Try logging in again");
+      }
+  };
+
   return (
-    <Navbar expand="lg" className="drkx">
+    <div>
+      <Navbar expand="lg" className="drkx">
       <Container fluid>
         <Navbar.Brand as={Link} to="/" className='tw'>Govindam Sarees</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
@@ -22,7 +48,7 @@ function MyNavbar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#" className='tw'>Home</Nav.Link>
+            {/* <Nav.Link href="#" className='tw'>Home</Nav.Link> */}
             <NavDropdown title="Options" className='tw' id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3" >{user ? (<p onClick={logoutUser}>Logout</p>) : (<Link to="/login">Login</Link>)}</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
@@ -34,15 +60,17 @@ function MyNavbar() {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
-          <Form className="d-flex">
+          <Form className="d-flex" onSubmit={handleSearch}>
             <Form.Control
               type="search"
               placeholder="Search"
               className="me-2"
               aria-label="Search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
             />
-            <Button variant="outline-success">Search</Button>
-          </Form>
+            <Button variant="outline-success" type="submit">Search</Button>
+        </Form>
           
         </Navbar.Collapse>
         <Button className='mx-4' as={Link} to="/cart">
@@ -57,6 +85,30 @@ function MyNavbar() {
         </Button>
       </Container>
     </Navbar>
+
+    { searchItems &&
+      <div>
+        <br></br>
+        <h3 className='tw search-head'>Search results for '{query}'</h3>
+        <div className="product-grid card-group-homeitems">
+          {searchItems.map(homeItem => (
+            <ProductCard
+              key={homeItem.id}
+              id={homeItem.id}
+              name={homeItem.name}
+              price={homeItem.price}
+              image={homeItem.image}
+              rating={homeItem.rating}
+              reviews={homeItem.reviews}
+              link1={homeItem.link1}
+              link2={homeItem.link2}
+            />
+          ))}
+        </div>
+      </div>
+    }
+
+    </div>
   );
 }
 

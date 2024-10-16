@@ -9,6 +9,7 @@ from base.models import Note, Item, Cart, CartItem, Category, UserProfile, User
 from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserProfileSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework import generics, status
+from django.db.models import Q
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -116,7 +117,7 @@ class CartView(generics.ListAPIView):
             user = User.objects.get(id=id)
             cart = Cart.objects.get(user=user)
             cart_items = CartItem.objects.filter(cart=cart)
-            serializer = CartItemSerializer(cart_items, many=True)
+            serializer = self.get_serializer(cart_items, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         except Cart.DoesNotExist:
@@ -141,3 +142,15 @@ class UserProfileView(generics.RetrieveAPIView):
             raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class Search(generics.ListAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+
+    def get_queryset(self):
+        queryset = Item.objects.all()
+        query = self.request.query_params.get('query', None)
+        if query:
+            queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        return queryset

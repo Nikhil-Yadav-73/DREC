@@ -115,7 +115,7 @@ const Cart = () => {
                         type="text"
                         value={cartItem.quantity}
                         readOnly
-                        className="text-center mx-2 tw"
+                        className="text-center mx-2"
                         style={{ width: '50px' }}
                     />
                     <Button

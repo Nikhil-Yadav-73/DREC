@@ -46,3 +46,9 @@
 .tw, .dropdown-toggle {
   color: white !important;
 }
+
+.search-head{
+  color: white !important;
+  margin-bottom: 3px;
+  text-align: center;
+}
