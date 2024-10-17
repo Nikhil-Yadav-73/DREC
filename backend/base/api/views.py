@@ -171,3 +171,54 @@ class Search(generics.ListAPIView):
         if query:
             queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
         return queryset
+    
+class AddToCartView(generics.RetrieveUpdateAPIView):
+    queryset = Item.objects.all()
+    serializer_class = ItemSerializer
+    lookup_field = 'id'
+
+    def post(self, request, id, pk, *args, **kwargs):
+        try:
+            user = User.objects.get(id=id)
+            cart, created = Cart.objects.get_or_create(user=user)
+            item = Item.objects.get(id=pk)
+            cart_item, created = CartItem.objects.get_or_create(
+                cart=cart,
+                item=item,
+            )
+            cart_item.save()
+
+            return Response({'message': 'Item added to cart successfully!'}, status=status.HTTP_201_CREATED)
+
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+class DeleteCartItem(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CartItemSerializer
+    lookup_field = 'pk'
+
+    def post(self, request, id, pk, *args, **kwargs):
+        try:
+            user = User.objects.get(id=id)
+            cart = Cart.objects.get(user=user)
+            item = Item.objects.get(id=pk)
+            cart_item = CartItem.objects.get(item=item, cart=cart)
+            cart_item.delete()
+            cart.save()
+
+            cart_items = CartItem.objects.filter(cart=cart)
+            serializer = self.get_serializer(cart_items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Cart.DoesNotExist:
+            return Response({"detail": "Cart is Empty"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        

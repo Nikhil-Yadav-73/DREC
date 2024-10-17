@@ -40,7 +40,7 @@ function MyNavbar() {
     <div>
       <Navbar expand="lg" className="drkx">
       <Container fluid>
-        <Navbar.Brand as={Link} to="/" className='tw'>Govindam Sarees</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/" className='tw'>ShopNik</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav

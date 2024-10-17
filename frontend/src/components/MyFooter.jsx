@@ -5,7 +5,7 @@ const MyFooter = () => {
     return (
         <footer className="footer">
             <div className="footer-content">
-                <p>&copy; {new Date().getFullYear()} Govindam Sarees. All rights reserved.</p>
+                <p>&copy; {new Date().getFullYear()} ShopNik. All rights reserved.</p>
                 <div className="social-links">
                     <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
                         Facebook

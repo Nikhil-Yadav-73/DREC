@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import axios from 'axios';
@@ -6,13 +6,16 @@ import ProductCard from '../components/ProductCard';
 import './ItemDesc.css';
 import MyFooter from '../components/MyFooter';
 import MyNavbar from '../components/MyNavbar';
+import AuthContext from '../context/AuthContext';
 
 
 const ItemDesc = () => {
     const { id } = useParams();
+    const { user } = useContext(AuthContext);
     const [item, setItem] = useState(null);
     const [recommendedItems, setRecommendedItems] = useState([]);
     const [selectedSize, setSelectedSize] = useState("");
+    const itemId = Number(id);
 
     useEffect(() => {
         const fetchItem = async () => {
@@ -38,14 +41,22 @@ const ItemDesc = () => {
         fetchRecommendedItems();
     }, [id]);
 
-    
 
     if (!item) {
         return <div>Loading...</div>;
     }
 
-    const handleAddToCart = () => {
-        console.log('Item added to cart:', item);
+    const handleAddToCart = async () => {
+        try {
+            const response = await fetch(`http://localhost:8000/api/items/add_to_cart/${user.user_id}/${id}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+            });
+    
+            console.log('Item added to cart:', response.data);
+        } catch (error) {
+            console.error('Error adding item to cart:', error);
+        }
     };
     
 
@@ -114,27 +125,3 @@ const ItemDesc = () => {
 };
 
 export default ItemDesc;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -16,6 +16,8 @@ urlpatterns = [
     path('cart/<int:id>', views.CartView.as_view(), name='cart_view'), 
     path('userprofile/<int:id>', views.UserProfileView.as_view(), name='user_profile'),
     path('items/search/', views.Search.as_view(), name='search_items'),
+    path('items/add_to_cart/<int:id>/<int:pk>', views.AddToCartView.as_view(), name='add_to_cart'),
+    path('items/delete_cart_item/<int:id>/<int:pk>', views.DeleteCartItem.as_view(), name='delete_cart_item'),
     path('notes', views.getnotes),
 ]
 if settings.DEBUG:

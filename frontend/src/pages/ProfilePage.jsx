@@ -99,9 +99,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
             });
         
             if (response.status === 200) {
-                // Fetch the updated profile
                 await getUserProfile();
-                alert('Profile updated successfully!');
             } else {
                 alert('Error updating profile');
             }

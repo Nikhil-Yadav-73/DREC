@@ -8,6 +8,7 @@ import './HomePage.css';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 import CategoryCard from '../components/CategoryCard';
+import { Link } from 'react-router-dom';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -33,7 +34,6 @@ const Cart = () => {
           }
         });
         let data = await response.json();
-        console.log("Cart Items Response Data:", data);
     
         if (response.status === 200) {
           setCartItems(data);
@@ -43,7 +43,7 @@ const Cart = () => {
           alert("Something went wrong! Try logging in again");
         }
     };
-
+   
     const updateQuantity = (id, increment) => {
         setCartItems(cartItems.map(item => 
             item.id === id
@@ -52,8 +52,24 @@ const Cart = () => {
         ));
     };
 
-    const removeItem = (id) => {
-        setCartItems(cartItems.filter(item => item.id !== id));
+    const removeItem = async (id) => {
+            let response = await fetch(`http://localhost:8000/api/items/delete_cart_item/${user.user_id}/${id}`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': "application/json",
+                'Authorization': 'Bearer ' + String(authTokens.access)
+              }
+            });
+            let data = await response.json();
+        
+            if (response.status === 200) {
+              setCartItems(data);
+            } else if (response.status === 401) {
+              logoutUser();
+            } 
+            else {
+              alert("Something went wrong! Try logging in again");
+            }
     };
 
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
@@ -61,16 +77,14 @@ const Cart = () => {
     let totalCartValue = 0;
     for (let i = 0; i < cartItems.length; i++) {
         const item = cartItems[i];
-        console.log(item);
         
         const price = parseFloat(item.item.price);
-        const quantity = parseInt(item.item.quantity);
-        console.log(`price  ${price}, quantity ${quantity}`);
+        const quantity = parseInt(item.quantity);
 
         if (!isNaN(price) && !isNaN(quantity)) {
             totalCartValue += price * quantity;
         } else {
-            console.log(`Invalid values for item ${item.item.name}: Price - ${item.item.price}, Quantity - ${item.item.quantity}`);
+            console.log(`Invalid values for item ${item.item.name}: Price - ${item.item.price}, Quantity - ${quantity}`);
         }
     }
 
@@ -96,7 +110,9 @@ const Cart = () => {
                     {cartItems.map(cartItem => (
     <Row key={cartItem.id} className="align-items-center my-3 tw">
         <Col xs={2}>
+            <Link to={`/product/${cartItem.item.id}`}>
             <img src={cartItem.item.image} alt={cartItem.item.name} className="img-fluid tw" />
+            </Link>
         </Col>
         <Col xs={4}>
             <h5>{cartItem.item.name}</h5>
@@ -129,12 +145,12 @@ const Cart = () => {
             </Form>
         </Col>
         <Col xs={2}>
-            <h5>${cartItem.item.price * cartItem.item.quantity}</h5>
+            <h5>${cartItem.item.price * cartItem.quantity}</h5>
         </Col>
         <Col xs={2}>
             <Button
                 variant="danger"
-                onClick={() => removeItem(cartItem.id)}
+                onClick={() => removeItem(cartItem.item.id)}
             >
                 <FaTrash />
             </Button>
