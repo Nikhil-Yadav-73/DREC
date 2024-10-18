@@ -6,10 +6,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from base.models import Note, Item, Cart, CartItem, Category, UserProfile, User
-from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserProfileSerializer
+from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserSerializer, UserProfileSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework import generics, status
 from django.db.models import Q
+from rest_framework.permissions import AllowAny
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -41,7 +42,7 @@ def getnotes(request):
 
 # Core
 
-class ItemListView(generics.ListCreateAPIView):
+class ItemListView(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
@@ -222,3 +223,15 @@ class DeleteCartItem(generics.DestroyAPIView):
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
+class Signup(generics.CreateAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            user.set_password(user.password)
+            user.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -18,6 +18,8 @@ urlpatterns = [
     path('items/search/', views.Search.as_view(), name='search_items'),
     path('items/add_to_cart/<int:id>/<int:pk>', views.AddToCartView.as_view(), name='add_to_cart'),
     path('items/delete_cart_item/<int:id>/<int:pk>', views.DeleteCartItem.as_view(), name='delete_cart_item'),
+    path('signup/', views.Signup.as_view(), name='signup'),
+
     path('notes', views.getnotes),
 ]
 if settings.DEBUG:

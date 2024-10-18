@@ -9,6 +9,7 @@ import ItemDesc from './pages/ItemDesc';
 import Category from './pages/Category';
 import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
+import SignupPage from './pages/SignupPage';
 
 function App() {
   const isAuthenticated = true;
@@ -26,6 +27,7 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<ProfilePage />} />
             </Route>
+            <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         </AuthProvider>

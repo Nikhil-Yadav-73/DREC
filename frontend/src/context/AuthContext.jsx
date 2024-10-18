@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import {jwtDecode} from 'jwt-decode'; // Update to 'jwt-decode' for proper import
+import {jwtDecode} from 'jwt-decode';
 import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext();
@@ -8,7 +8,7 @@ export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
     let [loading, setLoading] = useState(true);
-    const navigate = useNavigate(); // Renaming to 'navigate'
+    const navigate = useNavigate();
     const [authTokens, setAuthTokens] = useState(() => {
         const storedTokens = localStorage.getItem('authTokens');
         return storedTokens ? JSON.parse(storedTokens) : null;
@@ -45,9 +45,9 @@ export const AuthProvider = ({ children }) => {
             if (response.ok) {
                 const data = await response.json();
                 setAuthTokens(data);
-                localStorage.setItem('authTokens', JSON.stringify(data)); // Store tokens
+                localStorage.setItem('authTokens', JSON.stringify(data));
                 console.log("Navigating to home page");
-                navigate("/"); // Navigate to home after successful login
+                navigate("/");
             } else {
                 alert('Something went wrong');
             }
@@ -97,8 +97,8 @@ export const AuthProvider = ({ children }) => {
     const logoutUser = () => {
         setAuthTokens(null);
         setUser(null);
-        localStorage.removeItem('authTokens'); // Clear tokens from storage
-        navigate("/login"); // Navigate to login page
+        localStorage.removeItem('authTokens');
+        navigate("/login");
     };
 
     const ContextData = {
