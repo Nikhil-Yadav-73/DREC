@@ -181,10 +181,16 @@ class AddToCartView(generics.RetrieveUpdateAPIView):
             user = User.objects.get(id=id)
             cart, created = Cart.objects.get_or_create(user=user)
             item = Item.objects.get(id=pk)
-            cart_item, created = CartItem.objects.get_or_create(
-                cart=cart,
-                item=item,
-            )
+            try: 
+                cart_item = CartItem.objects.get(item=item, cart=cart)
+                if cart_item is not None:
+                    cart_item.quantity = cart_item.quantity + 1
+            except CartItem.DoesNotExist:
+                    cart_item = CartItem.objects.create(
+                    cart=cart,
+                    item=item,
+                    quantity = 1
+                )
             cart_item.save()
 
             return Response({'message': 'Item added to cart successfully!'}, status=status.HTTP_201_CREATED)

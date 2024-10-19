@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import SignupPage from './SignupPage';
 import { useNavigate } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
+import Form from 'react-bootstrap/Form';
 
 const LoginPage = () => {
   const { loginUser } = useContext(AuthContext);
@@ -15,7 +16,7 @@ const LoginPage = () => {
 
   return (
     <div>
-        <form className='mx-5' onSubmit={loginUser}>
+        <form className="mx-5 signup-form"  onSubmit={loginUser}>
             <br></br>
             <input type='text' name='username' placeholder='username' />
             <p></p>
