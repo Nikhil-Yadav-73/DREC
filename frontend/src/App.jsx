@@ -10,6 +10,7 @@ import Category from './pages/Category';
 import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
 import SignupPage from './pages/SignupPage';
+import Checkout from './pages/Checkout';
 
 function App() {
   const isAuthenticated = true;
@@ -26,6 +27,7 @@ function App() {
               <Route path="/category/:name" element={<Category />} />
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/checkout" element={<Checkout />} />
             </Route>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />

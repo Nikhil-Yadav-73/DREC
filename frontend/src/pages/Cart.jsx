@@ -4,7 +4,7 @@ import MyNavbar from '../components/MyNavbar';
 import MyFooter from '../components/MyFooter';
 import ProductCard from '../components/ProductCard';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './HomePage.css'; 
+import './HomePage.css';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 import CategoryCard from '../components/CategoryCard';
