@@ -42,12 +42,20 @@ const Cart = () => {
         } 
     };
    
-    const updateQuantity = (id, increment) => {
-        setCartItems(cartItems.map(item => 
-            item.id === id
-                ? { ...item, quantity: item.quantity + increment >= 1 ? item.quantity + increment : 1 }
-                : item
-        ));
+    const updateQuantity = async(id, increment) => {
+        let response = await fetch(`http://localhost:8000/api/update_cartitem_quantity/${id}/${increment}/${user.user_id}`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': "application/json",
+              'Authorization': 'Bearer ' + String(authTokens.access)
+            }});
+            let data = await response.json();
+            
+            if (response.status === 200) {
+                setCartItems(data);
+            } else if (response.status === 401) {
+                logoutUser();
+            } 
     };
 
     const removeItem = async (id) => {
@@ -121,7 +129,7 @@ const Cart = () => {
                     <Button
                         variant="outline-secondary"
                         size="sm"
-                        onClick={() => updateQuantity(cartItem.id, -1)}
+                        onClick={() => updateQuantity(cartItem.item.id, -1)}
                     >
                         -
                     </Button>
@@ -135,7 +143,7 @@ const Cart = () => {
                     <Button
                         variant="outline-secondary"
                         size="sm"
-                        onClick={() => updateQuantity(cartItem.id, 1)}
+                        onClick={() => updateQuantity(cartItem.item.id, 1)}
                     >
                         +
                     </Button>

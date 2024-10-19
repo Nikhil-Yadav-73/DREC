@@ -240,3 +240,34 @@ class Signup(generics.CreateAPIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class UpdateCartItemQuantity(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = CartItemSerializer 
+    lookup_field = 'id'
+
+    def post(self, request, id, act, user_id, *args, **kwargs):
+        try:
+            num = int(act)
+            user = User.objects.get(id=user_id)
+            item = Item.objects.get(id=id)
+            cart = Cart.objects.get(user=user)
+            cart_item = CartItem.objects.get(item=item, cart=cart)
+            cart_item.quantity = cart_item.quantity + num
+            if item.quantity < cart_item.quantity:
+                cart_item.quantity = item.quantity
+                cart_item.save()
+            if cart_item.quantity <= 0:
+                cart_item.delete()
+            else: cart_item.save()
+
+            cart_items = CartItem.objects.filter(cart=cart)
+            serializer = self.get_serializer(cart_items, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except CartItem.DoesNotExist:
+            return Response({'error': 'Cart Item not found'}, status=status.HTTP_404_NOT_FOUND)
+        except Item.DoesNotExist:
+            return Response({'error': 'Item not found (out of stock)'}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            print(e)
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

@@ -19,6 +19,7 @@ urlpatterns = [
     path('items/add_to_cart/<int:id>/<int:pk>', views.AddToCartView.as_view(), name='add_to_cart'),
     path('items/delete_cart_item/<int:id>/<int:pk>', views.DeleteCartItem.as_view(), name='delete_cart_item'),
     path('signup/', views.Signup.as_view(), name='signup'),
+    path('update_cartitem_quantity/<int:id>/<str:act>/<int:user_id>', views.UpdateCartItemQuantity.as_view()),
 
     path('notes', views.getnotes),
 ]
