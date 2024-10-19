@@ -39,9 +39,7 @@ const Cart = () => {
           setCartItems(data);
         } else if (response.status === 401) {
           logoutUser();
-        } else {
-          alert("Something went wrong! Try logging in again");
-        }
+        } 
     };
    
     const updateQuantity = (id, increment) => {

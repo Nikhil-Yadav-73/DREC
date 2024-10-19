@@ -23,13 +23,18 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         if (authTokens) {
-            setUser(jwtDecode(authTokens.access));
+            try {
+                setUser(jwtDecode(authTokens.access));
+            } catch (error) {
+                console.error("Invalid token:", error);
+                logoutUser();
+            }
         }
     }, [authTokens]);
 
     const loginUser = async (e) => {
         e.preventDefault();
-        console.log("login form submitted");
+
         try {
             const response = await fetch('http://127.0.0.1:8000/api/token/', {
                 method: 'POST',
@@ -41,24 +46,25 @@ export const AuthProvider = ({ children }) => {
                     password: e.target.password.value,
                 }),
             });
-
+           
             if (response.ok) {
                 const data = await response.json();
+                const decodedUser = jwtDecode(data.access);
                 setAuthTokens(data);
+                setUser(decodedUser);
                 localStorage.setItem('authTokens', JSON.stringify(data));
-                console.log("Navigating to home page");
                 navigate("/");
             } else {
-                alert('Something went wrong');
+                console.log(await response.json());
+                alert('Invalid credentials');
             }
         } catch (error) {
             console.error('Error during login:', error);
             alert('An error occurred. Please try again.');
         }
-    };
+    };   
 
     const updateToken = async () => {
-        console.log('Updating tokens...');
         const response = await fetch('http://127.0.0.1:8000/api/token/refresh/', {
             method: 'POST',
             headers: {
@@ -71,7 +77,7 @@ export const AuthProvider = ({ children }) => {
         if (response.ok) {
             const data = await response.json();
             setAuthTokens(data);
-            localStorage.setItem('authTokens', JSON.stringify(data)); // Store tokens
+            localStorage.setItem('authTokens', JSON.stringify(data));
         } else {
             logoutUser();
         }

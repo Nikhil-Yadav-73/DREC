@@ -1,13 +1,56 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
+import {jwtDecode} from 'jwt-decode';
 
 function SignupPage() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const [authTokens, setAuthTokens] = useState(() => {
+    const storedTokens = localStorage.getItem('authTokens');
+    return storedTokens ? JSON.parse(storedTokens) : null;
+  });
+  const [user, setUser] = useState(() => {
+    if (authTokens) {
+        return jwtDecode(authTokens.access);
+    }
+    return null;
+  });
+
+  
+  const loginUser = async (username, password) => {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/token/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            const decodedUser = jwtDecode(data.access);
+            setAuthTokens(data);
+            setUser(decodedUser);
+            localStorage.setItem('authTokens', JSON.stringify(data));
+            console.log("sab ho gaya");
+            navigate("/");
+            console.log('home pe gaya tha');
+        } else {
+            console.log(await response.json());
+            alert('Invalid credentials');
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        alert('An error occurred. Please try again.');
+    }
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,14 +61,13 @@ function SignupPage() {
       },
       body: JSON.stringify({
         email: email,
-        username: name,  // Assuming you are using 'username' in your User model
+        username: name, 
         password: password,
       }),
     });
 
     if (response.ok) {
-      alert('Signup successful!');
-      navigate('/login');  // Redirect to login page after successful signup
+      loginUser(name, password);
     } else {
       const data = await response.json();
       alert('Signup failed: ' + (data.error || 'Unknown error'));
@@ -49,7 +91,7 @@ function SignupPage() {
         <Form.Label className=''>Name</Form.Label>
         <Form.Control
           type="text"
-          name="name"
+          name="username"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter your name"
@@ -70,30 +112,27 @@ function SignupPage() {
       <Button variant="primary" className="mb-5" type="submit">
         Submit
       </Button>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
+      <br></br>
     </Form>
   );
 }
 
 export default SignupPage;
-
-
-
-{/* <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br>
-      <br></br> */}

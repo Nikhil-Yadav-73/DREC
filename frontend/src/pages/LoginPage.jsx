@@ -15,14 +15,15 @@ const LoginPage = () => {
 
   return (
     <div>
-        <form onSubmit={loginUser}>
-            <p></p>
+        <form className='mx-5' onSubmit={loginUser}>
+            <br></br>
             <input type='text' name='username' placeholder='username' />
             <p></p>
             <input type='password' name='password' placeholder='password' />
             <p></p>
             <button type='submit'>Submit</button>
-            <button onClick={Signup}>Signup Here</button>
+            <button className='mx-5' onClick={Signup}>Signup Here</button>
+            <br></br>
         </form>
     </div>
   );
