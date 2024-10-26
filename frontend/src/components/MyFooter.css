@@ -1,29 +1,29 @@
-/* Footer.css */
 .footer {
     background-color: #333;
     color: #fff;
     padding: 20px;
-    position: fixed; /* Stick the footer to the bottom */
+    position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%; /* Full width */
+    width: 100%;
     text-align: center;
 }
 
 .footer-content {
     display: flex;
-    justify-content: space-between; /* Space between content */
-    align-items: center; /* Center items vertically */
+    justify-content: space-between;
+    align-items: center;
 }
 
 .social-links a {
-    margin: 0 10px; /* Space between links */
-    color: #fff; /* Link color */
-    text-decoration: none; /* Remove underline */
+    margin: 0 10px;
+    color: #fff;
+    text-decoration: none;
 }
 
 .social-links a:hover {
-    text-decoration: underline; /* Underline on hover */
+    text-decoration: underline;
+    color:chartreuse;
 }
 
 .catecard {

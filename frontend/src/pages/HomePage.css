@@ -10,7 +10,7 @@
   
   .custom-carousel .carousel-item {
     display: flex;
-    justify-content: space-around; /* Ensure equal spacing between cards */
+    justify-content: space-around;
     padding-left: 50px;
     padding-right:50px;
     margin-left:20px;

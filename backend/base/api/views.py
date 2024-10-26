@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
-from base.models import Note, Item, Cart, CartItem, Category, UserProfile, User
-from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserSerializer, UserProfileSerializer
+from base.models import Note, Item, Cart, CartItem, Category, UserProfile, User, Post
+from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserSerializer, UserProfileSerializer, PostSerializer
 from rest_framework.exceptions import NotFound
 from rest_framework import generics, status
 from django.db.models import Q
@@ -271,3 +271,55 @@ class UpdateCartItemQuantity(generics.RetrieveUpdateDestroyAPIView):
         except Exception as e:
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+class PostsView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+    def get(self, request, *args, **kwargs):
+        try:
+            posts = Post.objects.all().order_by('-created_at')
+            serializer = self.get_serializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
+class LikePost(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+    def post(self, request, id, pk, *args, **kwargs):
+        try:
+            post = Post.objects.get(id=pk)
+            user = User.objects.get(id=id)
+            if post.liked_by.filter(id=user.id).exists():
+                post.likes = post.likes - 1
+                post.liked_by.remove(user)
+            else:
+                post.likes = post.likes + 1
+                post.liked_by.add(user)
+            post.save()
+            serializer = self.get_serializer(post)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({'error':str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
+class NewPost(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+    queryset = Post.objects.all()
+
+    def post(self, request, id, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        print(serializer)
+        if serializer.is_valid():
+            post = serializer.save()
+            post.user_id = id
+            post.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

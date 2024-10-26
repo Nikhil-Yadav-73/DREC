@@ -17,6 +17,7 @@ class Category(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=254)
+    user_id = models.IntegerField(default=1)
     image = models.ImageField(upload_to='item_images', blank=True, null=True)
     video = models.FileField(upload_to='videos/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)

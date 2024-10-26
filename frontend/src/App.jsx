@@ -11,11 +11,12 @@ import Cart from './pages/Cart';
 import ProfilePage from './pages/ProfilePage';
 import SignupPage from './pages/SignupPage';
 import Checkout from './pages/Checkout';
+import Posts from './pages/Posts';
+import NewPost from './pages/NewPost';
 
 function App() {
   const isAuthenticated = true;
 
-  
   return (
     <div className="App">
       <Router>
@@ -28,6 +29,8 @@ function App() {
               <Route path="/cart" element={<Cart />} />
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path='/posts' element={<Posts />} />
+              <Route path='/new_post' element={< NewPost/>} />
             </Route>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />

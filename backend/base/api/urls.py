@@ -20,6 +20,9 @@ urlpatterns = [
     path('items/delete_cart_item/<int:id>/<int:pk>', views.DeleteCartItem.as_view(), name='delete_cart_item'),
     path('signup/', views.Signup.as_view(), name='signup'),
     path('update_cartitem_quantity/<int:id>/<str:act>/<int:user_id>', views.UpdateCartItemQuantity.as_view()),
+    path('posts/', views.PostsView.as_view()),
+    path('like_post/<int:id>/<int:pk>', views.LikePost.as_view()),
+    path('new_post/<int:id>', views.NewPost.as_view()),
 
     path('notes', views.getnotes),
 ]

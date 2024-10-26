@@ -55,8 +55,8 @@ function MyNavbar() {
                 Another action
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
-                Something else here
+              <NavDropdown.Item href="posts">
+                Posts
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>

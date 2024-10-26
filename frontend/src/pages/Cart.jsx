@@ -9,6 +9,7 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { FaTrash } from 'react-icons/fa';
 import CategoryCard from '../components/CategoryCard';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -18,12 +19,12 @@ const Cart = () => {
     const { user } = useContext(AuthContext);
     const [userprofile, setUserProfile] = useState(null);
     let { authTokens, logoutUser } = useContext(AuthContext);
-
+    const navigate = useNavigate();
 
     useEffect(() => {
         getCartItems();
     }, []);
-    
+
 
     const getCartItems = async () => {
         let response = await fetch(`http://localhost:8000/api/cart/${user.user_id}`, {
@@ -220,7 +221,7 @@ const Cart = () => {
                                     className="text-right"
                                 />
                             </Form.Group>
-                            <Button variant="success" className="w-100">
+                            <Button variant="success" className="w-100">    
                                 Checkout
                             </Button>
                         </Col>

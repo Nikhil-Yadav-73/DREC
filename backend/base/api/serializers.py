@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from base.models import Note, Item, Category, Cart, CartItem, UserProfile
+from base.models import Note, Item, Category, Cart, CartItem, UserProfile, Post
 from django.contrib.auth.models import User
 
 class NoteSerializer(serializers.ModelSerializer):
@@ -65,3 +65,10 @@ class UserSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+    
+class PostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Post
+        fields = '__all__'
+    
+    
