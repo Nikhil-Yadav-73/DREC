@@ -48,7 +48,7 @@ function MyNavbar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            {/* <Nav.Link href="#" className='tw'>Home</Nav.Link> */}
+            <Nav.Link href="posts" className='tw'>Posts</Nav.Link>
             <NavDropdown title="Options" className='tw' id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3" >{user ? (<p onClick={logoutUser}>Logout</p>) : (<Link to="/login">Login</Link>)}</NavDropdown.Item>
               <NavDropdown.Item href="#action4">

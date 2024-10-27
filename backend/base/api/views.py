@@ -272,7 +272,7 @@ class UpdateCartItemQuantity(generics.RetrieveUpdateDestroyAPIView):
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
-class PostsView(generics.RetrieveAPIView):
+class PostsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
     queryset = Post.objects.all()
