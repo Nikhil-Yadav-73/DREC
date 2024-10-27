@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from base.models import Note, Item, Cart, CartItem, Category, UserProfile, User, Post
 from .serializers import NoteSerializer, ItemSerializer, CategorySerializer, CartItemSerializer, UserSerializer, UserProfileSerializer, PostSerializer
 from rest_framework.exceptions import NotFound
-from rest_framework import generics, status
+from rest_framework import generics, status, pagination
 from django.db.models import Q
 from rest_framework.permissions import AllowAny
 
@@ -272,19 +272,19 @@ class UpdateCartItemQuantity(generics.RetrieveUpdateDestroyAPIView):
             print(e)
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
         
+class PostsPagination(pagination.PageNumberPagination):
+    page_size = 12
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+        
 class PostsView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+    queryset = Post.objects.all().order_by("-created_at")
+    pagination_class = PostsPagination
 
     def get(self, request, *args, **kwargs):
-        try:
-            posts = Post.objects.all().order_by('-created_at')
-            serializer = self.get_serializer(posts, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+        return super().get(request, *args, **kwargs)
         
 class LikePost(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated]
