@@ -4,6 +4,7 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Button } from 'react-bootstrap';
 import { FaThumbsUp, FaTrash } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
+import "./ProductCard.css"
 
 function PostCard({ id, title, creator_id, description, image, likes, onLikeUpdate }) {
     const { user, authTokens, logoutUser } = useContext(AuthContext);
@@ -39,7 +40,7 @@ function PostCard({ id, title, creator_id, description, image, likes, onLikeUpda
                 <ListGroup.Item>{description}</ListGroup.Item>
                 <ListGroup.Item>Likes: {likeCount}</ListGroup.Item>
                 <Button onClick={LikePost}><FaThumbsUp /></Button>
-                {(user.user_id === creator_id) ? <button><FaTrash /></button> : <br></br>}
+                {(user.user_id === creator_id) ? <button className='delete_btn'><FaTrash /></button> : <br></br>}
             </ListGroup>
         </Card>
     );

@@ -100,10 +100,7 @@ const Posts = () => {
                     Next
                 </Button>
             </div>
-              <br></br>
-              <br></br>
-              <br></br>
-              <br></br>
+              
             <MyFooter />
         </div>
     );
