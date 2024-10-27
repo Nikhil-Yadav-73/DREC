@@ -30,6 +30,20 @@ function PostCard({ id, title, creator_id, description, image, likes, onLikeUpda
         }
     };
 
+    const deletePost = async() => {
+        let response = await fetch(`http://localhost:8000/api/delete_post/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': "application/json",
+                'Authorization': 'Bearer ' + String(authTokens.access)
+            }
+        });
+        let data = await response.json();
+        if(response.status === 200){
+            console.log("delete ho gaya")
+        }
+    };
+
     return (
         <Card style={{ width: '18rem' }}>
             <Card.Img variant="top" src={image || 'https://via.placeholder.com/150'} />
@@ -40,7 +54,7 @@ function PostCard({ id, title, creator_id, description, image, likes, onLikeUpda
                 <ListGroup.Item>{description}</ListGroup.Item>
                 <ListGroup.Item>Likes: {likeCount}</ListGroup.Item>
                 <Button onClick={LikePost}><FaThumbsUp /></Button>
-                {(user.user_id === creator_id) ? <button className='delete_btn'><FaTrash /></button> : <br></br>}
+                {(user.user_id === creator_id || user.user_id === 1) ? <button className='delete_btn'><FaTrash /></button> : <br></br>}
             </ListGroup>
         </Card>
     );

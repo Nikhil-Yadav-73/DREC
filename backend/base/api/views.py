@@ -323,3 +323,19 @@ class NewPost(generics.CreateAPIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class deletePost(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            post = Post.objects.get(id=pk)
+            post.delete()
+            posts = Post.objects.all()
+            serializer = self.get_serializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            print(e)
+            return Response({'error':str(e)}, status=status.HTTP_404_NOT_FOUND)
