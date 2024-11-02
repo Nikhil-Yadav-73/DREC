@@ -19,6 +19,10 @@ const Posts = () => {
         navigate("/new_post");
     };
 
+    const handleDeletePost = (postId) => {
+        setPosts(posts.filter(post => post.id !== postId)); // Remove the deleted post
+    };
+
     useEffect(() => {
         getPosts(currentPage);
     }, [currentPage]);
@@ -84,6 +88,7 @@ const Posts = () => {
                             likes={post.likes}
                             onLikeUpdate={updateLikeCount}
                             creator_id={post.user_id}
+                            onDelete={handleDeletePost}
                         />
                     ))
                 ) : (

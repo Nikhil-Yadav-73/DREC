@@ -9,17 +9,26 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../App.css';
+import Card from 'react-bootstrap/Card';
 import ProductCard from './ProductCard';
 
 function MyNavbar() {
   const { user } = useContext(AuthContext);
   let { authTokens, logoutUser } = useContext(AuthContext);
   const [query, setQuery] = useState('');
-  const [searchItems, setSearchItems] = useState();
+  const [searchItems, setSearchItems] = useState([]);
+  const [searchCategories, setSearchCategoriess] = useState([]);
+  const [searchPosts, setSearchPosts] = useState([]);
 
-  const handleSearch = async (e) => {
+  const handleSearch = (e) => {
     e.preventDefault();
-      let response = await fetch(`http://localhost:8000/api/items/search/?query=${query}`, {
+    handleSearchItems();
+    handleSearchCategories();
+    handleSearchPosts();
+  };
+
+  const handleSearchItems = async () => {
+      let response = await fetch(`http://localhost:8000/api/search_items/?query=${query}`, {
         method: 'GET',
         headers: {
           'Content-Type': "application/json",
@@ -28,13 +37,51 @@ function MyNavbar() {
       });
       let data = await response.json();
       if (response.status === 200) {
-        setSearchItems(data);
+        setSearchItems(data.results);
       } else if (response.statusText === 'Unauthorized') {
         logoutUser();
       } else {
         alert("Something went wrong! Try logging in again");
       }
   };
+
+  const handleSearchCategories = async () => {
+      let response = await fetch(`http://localhost:8000/api/search_categories/?query=${query}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': "application/json",
+          'Authorization': 'Bearer ' + String(authTokens.access)
+        }
+      });
+      let data = await response.json();
+      if (response.status === 200) {
+        setSearchCategoriess(data.results);
+      } else if (response.statusText === 'Unauthorized') {
+        logoutUser();
+      } else {
+        alert("Something went wrong! Try logging in again");
+      }
+  };
+
+  const handleSearchPosts = async () => {
+      let response = await fetch(`http://localhost:8000/api/search_posts/?query=${query}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': "application/json",
+          'Authorization': 'Bearer ' + String(authTokens.access)
+        }
+      });
+      let data = await response.json();
+      if (response.status === 200) {
+        setSearchPosts(data.results);
+      } else if (response.statusText === 'Unauthorized') {
+        logoutUser();
+      } else {
+        alert("Something went wrong! Try logging in again");
+      }
+  };
+
+
 
   return (
     <div>
@@ -86,7 +133,7 @@ function MyNavbar() {
       </Container>
     </Navbar>
 
-    { searchItems &&
+    { searchItems && searchItems.length > 0 &&
       <div>
         <br></br>
         <h3 className='tw search-head'>Search results for '{query}'</h3>
@@ -103,6 +150,24 @@ function MyNavbar() {
               link1={homeItem.link1}
               link2={homeItem.link2}
             />
+          ))}
+        </div>
+      </div>
+    }
+
+    { searchCategories && searchCategories.length > 0 &&
+      <div>
+        <br />
+        <h3 className='tw search-head'>Search results for '{query}'</h3>
+        <div className="card-group w-25 search-head mx-auto d-flex">
+          {searchCategories.map(category => (
+            <Card className="mb-2 px-1 catecard" key={category.id}>
+              <Card.Body>
+                <Link to={`/category/${category.name}`}>
+                  <Card.Title>{category.name}</Card.Title>
+                </Link>
+              </Card.Body>
+            </Card>
           ))}
         </div>
       </div>

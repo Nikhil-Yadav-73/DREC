@@ -160,7 +160,7 @@ class UserProfileView(generics.RetrieveAPIView):
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-class Search(generics.ListAPIView):
+class SearchItems(generics.ListAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
 
@@ -169,6 +169,28 @@ class Search(generics.ListAPIView):
         query = self.request.query_params.get('query', None)
         if query:
             queryset = queryset.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        return queryset
+    
+class SearchCategories(generics.ListAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_queryset(self):
+        queryset = Category.objects.all()
+        query = self.request.query_params.get('query', None)
+        if query:
+            queryset = queryset.filter(Q(name__icontains=query))
+        return queryset
+    
+class SearchPosts(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        queryset = Post.objects.all()
+        query = self.request.query_params.get('query', None)
+        if query:
+            queryset = queryset.filter(Q(title__icontains=query) | Q(description__icontains=query))
         return queryset
     
 class AddToCartView(generics.RetrieveUpdateAPIView):
@@ -335,7 +357,9 @@ class deletePost(generics.DestroyAPIView):
             post.delete()
             posts = Post.objects.all()
             serializer = self.get_serializer(posts, many=True)
-            return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             print(e)
             return Response({'error':str(e)}, status=status.HTTP_404_NOT_FOUND)
+        
+        

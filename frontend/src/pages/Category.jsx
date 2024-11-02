@@ -35,6 +35,7 @@ const Category = () => {
     return (
         <div>
             <MyNavbar />
+            <h3 className='search-head mt-4 pt-4'>{name}</h3>
             <div className="product-grid card-group-homeitems my-5">
                 {items.map(item => (
                 <ProductCard

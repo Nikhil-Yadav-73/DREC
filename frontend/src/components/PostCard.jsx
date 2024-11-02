@@ -6,7 +6,7 @@ import { FaThumbsUp, FaTrash } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
 import "./ProductCard.css"
 
-function PostCard({ id, title, creator_id, description, image, likes, onLikeUpdate }) {
+function PostCard({ id, title, creator_id, description, image, likes, onLikeUpdate, onDelete }) {
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     const [likeCount, setLikeCount] = useState(likes);
 
@@ -39,8 +39,10 @@ function PostCard({ id, title, creator_id, description, image, likes, onLikeUpda
             }
         });
         let data = await response.json();
-        if(response.status === 200){
-            console.log("delete ho gaya")
+        if (response.status === 200) {
+            onDelete(id);
+        } else if (response.status === 401) {
+            logoutUser();
         }
     };
 
@@ -54,7 +56,7 @@ function PostCard({ id, title, creator_id, description, image, likes, onLikeUpda
                 <ListGroup.Item>{description}</ListGroup.Item>
                 <ListGroup.Item>Likes: {likeCount}</ListGroup.Item>
                 <Button onClick={LikePost}><FaThumbsUp /></Button>
-                {(user.user_id === creator_id || user.user_id === 1) ? <button className='delete_btn'><FaTrash /></button> : <br></br>}
+                {(user.user_id === creator_id || user.user_id === 1) ? <button className='delete_btn' onClick={deletePost}><FaTrash /></button> : <br></br>}
             </ListGroup>
         </Card>
     );
