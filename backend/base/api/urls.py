@@ -26,6 +26,7 @@ urlpatterns = [
     path('like_post/<int:id>/<int:pk>', views.LikePost.as_view()),
     path('new_post/<int:id>', views.NewPost.as_view()),
     path('delete_post/<int:pk>', views.deletePost.as_view()),
+    path('update_post/<int:pk>', views.updatePost.as_view()),
 
     path('notes', views.getnotes),
 ]

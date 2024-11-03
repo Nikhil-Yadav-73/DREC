@@ -13,16 +13,15 @@ const NewPost = () => {
   
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null); // State for the image file
+  const [image, setImage] = useState(null);
 
   const NewPostF = async (e) => {
     e.preventDefault();
     
-    // Prepare form data
     let formData = new FormData();
     formData.append('title', title);
     formData.append('description', description);
-    if (image) formData.append('image', image); // Append image if available
+    if (image) formData.append('image', image);
 
     let response = await fetch(`http://localhost:8000/api/new_post/${user.user_id}`, {
       method: "POST",
@@ -44,8 +43,10 @@ const NewPost = () => {
     <div>
       <MyNavbar/>
       <br />
-      <h1 className='tw'>Make a new Post !</h1>
-      <Form onSubmit={NewPostF}>
+      <div className='d-flex mx-auto mt-5'>
+        <h1 className='d-flex mx-auto tw mt-5'>Make a new Post !</h1>
+      </div>
+      <Form onSubmit={NewPostF} className='mx-auto' style={{width: '50%'}}>
         <Form.Group className="mb-3" controlId="formBasicText">
           <Form.Label>Title</Form.Label>
           <Form.Control 
@@ -69,13 +70,16 @@ const NewPost = () => {
           <Form.Label>Upload Image</Form.Label>
           <Form.Control 
             type="file" 
-            onChange={(e) => setImage(e.target.files[0])} // Set the image file
+            onChange={(e) => setImage(e.target.files[0])}
           />
         </Form.Group>
         <Button variant="primary" type="submit">
           Submit
         </Button>
       </Form>
+      <br></br>
+      <br></br>
+      <br></br>
       <MyFooter />
     </div>
   );

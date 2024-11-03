@@ -362,4 +362,18 @@ class deletePost(generics.DestroyAPIView):
             print(e)
             return Response({'error':str(e)}, status=status.HTTP_404_NOT_FOUND)
         
-        
+
+class updatePost(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+    def post(self, request, pk, *args, **kwargs):
+        try:
+            post = Post.objects.get(id=pk)
+            posts = Post.objects.all()
+            serializer = self.get_serializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
+            return Response({'error':str(e)}, status=status.HTTP_404_NOT_FOUND)
