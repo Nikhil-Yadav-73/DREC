@@ -124,7 +124,7 @@ class CartView(generics.ListAPIView):
         except User.DoesNotExist:
             return Response({"detail": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         
-class UserProfileView(generics.RetrieveAPIView):
+class UserProfileView(generics.RetrieveUpdateAPIView):
     permission_classes = [IsAuthenticated]
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
@@ -135,28 +135,27 @@ class UserProfileView(generics.RetrieveAPIView):
             user = User.objects.get(id=id)
             userprofile, created = UserProfile.objects.get_or_create(user=user)
             serializer = self.get_serializer(userprofile)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            user_serializer = UserSerializer(user)
+            return Response({"profile":serializer.data,"user_data": user_serializer.data}, status=status.HTTP_200_OK)
         
         except User.DoesNotExist:
             raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    def post(self, request, id, *args, **kwargs):
+    
+    def put(self, request, id, *args, **kwargs):
         try:
             user = User.objects.get(id=id)
-            userprofile, created = UserProfile.objects.get_or_create(user=user)
+            userprofile = UserProfile.objects.get(user=user)
             serializer = self.get_serializer(userprofile, data=request.data, partial=True)
             
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
-            
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        
+
         except User.DoesNotExist:
-            raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
-        
+            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -377,3 +376,8 @@ class updatePost(generics.RetrieveUpdateAPIView):
         except Exception as e:
             print(e)
             return Response({'error':str(e)}, status=status.HTTP_404_NOT_FOUND)
+
+
+class EditProfile(generics.RetrieveUpdateAPIView):
+    permission_classes = [IsAuthenticated]
+    queryset = UserProfile.objects.all()

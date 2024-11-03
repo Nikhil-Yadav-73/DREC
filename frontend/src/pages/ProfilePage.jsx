@@ -12,6 +12,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
         const { user } = useContext(AuthContext);
         const [userprofile, setUserProfile] = useState(null);
         let { authTokens, logoutUser } = useContext(AuthContext);
+        const [userdata, setUserData] = useState(null);
 
         const pastOrders = [
             { id: 1, date: '2024-09-20', total: '$150.00', status: 'Delivered' },
@@ -29,11 +30,9 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
             });
             let data = await response.json();
         
-            console.log("Response:", response);
-            console.log("Data:", data);
-        
             if (response.status === 200) {
-              setUserProfile(data);
+                setUserProfile(data.profile); 
+                setUserData(data.user_data);  
             } else if (response.status === 401) {
               logoutUser();
             } else {
@@ -47,63 +46,14 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
     
         const [profile, setProfile] = useState({
             profilePicture: userprofile ? userprofile.pfp : "default-image.png",
-            name: user ? user.username : '',
-            email: user ? user.email : '',
+            name: user ? user.username : 'empty',
+            email: userdata ? userdata.email : 'default@gmail.com',
             phone: userprofile ? userprofile.phone : "+911 1234567890",
             city: userprofile ? userprofile.city : 'Jaipur',
             state: userprofile ? userprofile.state : 'Rajasthan',
             country: userprofile ? userprofile.country : 'Bharat'
         });
     
-        
-    
-        const [formData, setFormData] = useState(profile);
-    
-        const handleChange = (e) => {
-            setFormData({ ...formData, [e.target.name]: e.target.value });
-        };
-    
-        useEffect(() => {
-            if (userprofile) {
-                setProfile({
-                    profilePicture: userprofile.pfp || "default-image.png",
-                    name: user.username,
-                    email: user.email,
-                    phone: userprofile.phone || "+911 1234567890",
-                    city: userprofile.city || 'Jaipur',
-                    state: userprofile.state || 'Rajasthan',
-                    country: userprofile.country || 'Bharat'
-                });
-        
-                setFormData({
-                    name: user.username,
-                    email: user.email,
-                    phone: userprofile.phone || "+911 1234567890",
-                    city: userprofile.city || 'Jaipur',
-                    state: userprofile.state || 'Rajasthan',
-                    country: userprofile.country || 'Bharat'
-                });
-            }
-        }, [userprofile, user]);
-        
-        const handleSave = async (e) => {
-            e.preventDefault();
-        
-            let response = await fetch(`http://localhost:8000/api/userprofile/${user.user_id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + String(authTokens.access)
-                },
-                body: JSON.stringify(formData)
-            });
-        
-            if (response.status === 200) {
-                await getUserProfile();
-            } else {
-                alert('Error updating profile');
-            }
-        };
 
         return (
             <Container>
@@ -127,14 +77,13 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                         <Card>
                             <Card.Body>
                                 <Card.Title>Edit Profile</Card.Title>
-                                <Form onSubmit={handleSave}>
+                                <Form>
                                     <Form.Group controlId="formName">
                                         <Form.Label>Name</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="name"
-                                            value={formData.name}
-                                            onChange={handleChange}
+                                            value={profile.name}
                                         />
                                     </Form.Group>
                                     <Form.Group controlId="formEmail">
@@ -142,8 +91,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                         <Form.Control
                                             type="email"
                                             name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
+                                            value={profile.email}
                                         />
                                     </Form.Group>
                                     <Form.Group controlId="formPhone">
@@ -151,8 +99,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                         <Form.Control
                                             type="text"
                                             name="phone"
-                                            value={formData.phone}
-                                            onChange={handleChange}
+                                            value={profile.phone}
                                         />
                                     </Form.Group>
                                     <Form.Group controlId="formCity">
@@ -160,8 +107,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                         <Form.Control
                                             type="text"
                                             name="city"
-                                            value={formData.city}
-                                            onChange={handleChange}
+                                            value={profile.city}
                                         />
                                     </Form.Group>
                                     <Form.Group controlId="formState">
@@ -169,8 +115,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                         <Form.Control
                                             type="text"
                                             name="state"
-                                            value={formData.state}
-                                            onChange={handleChange}
+                                            value={profile.state}
                                         />
                                     </Form.Group>
                                     <Form.Group controlId="formCountry">
@@ -178,8 +123,7 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                         <Form.Control
                                             type="text"
                                             name="country"
-                                            value={formData.country}
-                                            onChange={handleChange}
+                                            value={profile.country}
                                         />
                                     </Form.Group>
                                     <Button variant="primary" className='mt-2' type="submit">
