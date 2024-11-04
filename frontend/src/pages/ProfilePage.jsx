@@ -1,18 +1,25 @@
 import AuthContext from '../context/AuthContext';
 import MyNavbar from '../components/MyNavbar';
 import MyFooter from '../components/MyFooter';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomePage.css'; 
 import { useContext, useState, useEffect } from 'react';
-
-
 import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootstrap';
+import { FaPencilAlt } from 'react-icons/fa';
+import "../components/ProductCard.css"
+import { Link } from 'react-router-dom';
 
     const ProfilePage = () => {
         const { user } = useContext(AuthContext);
         const [userprofile, setUserProfile] = useState(null);
         let { authTokens, logoutUser } = useContext(AuthContext);
         const [userdata, setUserData] = useState(null);
+        const navigate = useNavigate();
+
+        const to_edit_profile = () =>{
+            navigate("edit")
+        }
 
         const pastOrders = [
             { id: 1, date: '2024-09-20', total: '$150.00', status: 'Delivered' },
@@ -69,70 +76,12 @@ import { Container, Row, Col, Card, Form, Button, ListGroup } from 'react-bootst
                                     <strong>Phone:</strong> {profile.phone}<br />
                                     <strong>Location:</strong> {profile.city}, {profile.state}, {profile.country}
                                 </Card.Text>
+                                <button className='edit_btn' onClick={to_edit_profile}><FaPencilAlt /></button>
                             </Card.Body>
                         </Card>
                     </Col>
     
-                    <Col md={7}>
-                        <Card>
-                            <Card.Body>
-                                <Card.Title>Edit Profile</Card.Title>
-                                <Form>
-                                    <Form.Group controlId="formName">
-                                        <Form.Label>Name</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="name"
-                                            value={profile.name}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formEmail">
-                                        <Form.Label>Email</Form.Label>
-                                        <Form.Control
-                                            type="email"
-                                            name="email"
-                                            value={profile.email}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formPhone">
-                                        <Form.Label>Phone</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="phone"
-                                            value={profile.phone}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formCity">
-                                        <Form.Label>City</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="city"
-                                            value={profile.city}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formState">
-                                        <Form.Label>State</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="state"
-                                            value={profile.state}
-                                        />
-                                    </Form.Group>
-                                    <Form.Group controlId="formCountry">
-                                        <Form.Label>Country</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            name="country"
-                                            value={profile.country}
-                                        />
-                                    </Form.Group>
-                                    <Button variant="primary" className='mt-2' type="submit">
-                                        Save
-                                    </Button>
-                                </Form>
-                            </Card.Body>
-                        </Card>
-                    </Col>
+                    
                 </Row>
     
                 {/* <Row className="mt-5">

@@ -13,6 +13,7 @@ import SignupPage from './pages/SignupPage';
 import Checkout from './pages/Checkout';
 import Posts from './pages/Posts';
 import NewPost from './pages/NewPost';
+import EditProfile from './pages/EditProfile';
 
 function App() {
   const isAuthenticated = true;
@@ -31,6 +32,7 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path='/posts' element={<Posts />} />
               <Route path='/new_post' element={< NewPost/>} />
+              <Route path='profile/edit' element={< EditProfile/>} />
             </Route>
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
