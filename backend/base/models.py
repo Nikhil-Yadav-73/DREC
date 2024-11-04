@@ -33,10 +33,19 @@ class Post(models.Model):
   
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=40, blank=True)
     pfp = models.ImageField(upload_to='user_pfp', blank=True, null=True)
     liked_posts = models.ManyToManyField(Post, related_name='liked_by_users', blank=True)
     phone = models.CharField(max_length=15, default='1234567890')
-    is_verified = models.BooleanField(default=False) 
+    is_verified = models.BooleanField(default=False)
+    city = models.CharField(max_length=30, default="Jaipur")
+    state = models.CharField(max_length=30, default="Rajasthan")
+    country = models.CharField(max_length=30, default="Bharat")
+    
+    def save(self, *args, **kwargs):
+        if not self.name:
+            self.name = self.user.username
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return self.user.username

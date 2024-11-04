@@ -48,19 +48,28 @@ import { Link } from 'react-router-dom';
         };
     
         useEffect(() => {
-            getUserProfile();
-        }, []);
+                getUserProfile();
+        },[]);
+
+
     
         const [profile, setProfile] = useState({
-            profilePicture: userprofile ? userprofile.pfp : "default-image.png",
-            name: user ? user.username : 'empty',
+            pfp: userprofile ? userprofile.pfp : "default-image.png",
+            name: userprofile ? userprofile.name : 'empty',
             email: userdata ? userdata.email : 'default@gmail.com',
             phone: userprofile ? userprofile.phone : "+911 1234567890",
             city: userprofile ? userprofile.city : 'Jaipur',
             state: userprofile ? userprofile.state : 'Rajasthan',
             country: userprofile ? userprofile.country : 'Bharat'
         });
-    
+
+        if(userdata) profile.email = userdata.email
+        if(userprofile) profile.name = userprofile.name
+        if(userprofile) profile.phone = userprofile.phone
+        if(userprofile) profile.city = userprofile.city
+        if(userprofile) profile.country = userprofile.country
+        if(userprofile) profile.state = userprofile.state
+        if(userprofile) profile.pfp = userprofile.pfp
 
         return (
             <Container>
@@ -68,7 +77,7 @@ import { Link } from 'react-router-dom';
                 <Row className="my-5">
                     <Col md={5}>
                         <Card>
-                            <Card.Img variant="top" src={profile.profilePicture} alt="Profile" />
+                            <Card.Img variant="top" src={profile.pfp} alt="Profile" />
                             <Card.Body>
                                 <Card.Title>{profile.name}</Card.Title>
                                 <Card.Text>

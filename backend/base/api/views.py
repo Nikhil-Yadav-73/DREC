@@ -11,6 +11,8 @@ from rest_framework.exceptions import NotFound
 from rest_framework import generics, status, pagination
 from django.db.models import Q
 from rest_framework.permissions import AllowAny
+from rest_framework.parsers import JSONParser
+import json
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -142,22 +144,52 @@ class UserProfileView(generics.RetrieveUpdateAPIView):
             raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
     def put(self, request, id, *args, **kwargs):
         try:
             user = User.objects.get(id=id)
             userprofile = UserProfile.objects.get(user=user)
-            serializer = self.get_serializer(userprofile, data=request.data, partial=True)
-            
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+            # Parse profile and user_data JSON fields from FormData
+            profile_data = json.loads(request.data.get('profile', '{}'))
+            user_data = json.loads(request.data.get('user_data', '{}'))
+
+            # Update user information
+            if user_data:
+                user.username = user_data.get("username", user.username)
+                user.email = user_data.get("email", user.email)
+                userprofile.name = user.username
+                user.save()
+
+            # Update user profile information
+            if profile_data:
+                userprofile.city = profile_data.get('city', userprofile.city)
+                userprofile.state = profile_data.get('state', userprofile.state)
+                userprofile.country = profile_data.get('country', userprofile.country)
+                userprofile.phone = profile_data.get('phone', userprofile.phone)
+
+            # Handle file upload separately
+            if 'pfp' in request.FILES:
+                userprofile.pfp = request.FILES['pfp']
+            
+            userprofile.save()
+
+            # Serialize and return response
+            profile_serializer = self.get_serializer(userprofile, data=profile_data, partial=True)
+            if profile_serializer.is_valid():
+                profile_serializer.save()
+                return Response({
+                    "profile": UserProfileSerializer(userprofile).data,
+                    "user_data": UserSerializer(user).data
+                }, status=status.HTTP_200_OK)
+            
+            return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
         except User.DoesNotExist:
-            return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+            raise NotFound(detail="User not found", code=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"detail": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
 
 class SearchItems(generics.ListAPIView):
     queryset = Item.objects.all()

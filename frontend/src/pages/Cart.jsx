@@ -108,7 +108,7 @@ const Cart = () => {
     return (
         <Container className='mb-5'>
             <MyNavbar />
-            <h2 className='tw'>Your Shopping Cart</h2>
+            <h2 className='tw'>{user.username}'s Shopping Cart</h2>
 
             {cartItems.length === 0 ? (
                 <p>Your cart is empty</p>
