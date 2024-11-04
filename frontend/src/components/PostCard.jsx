@@ -4,14 +4,14 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import { Button } from 'react-bootstrap';
 import { FaThumbsUp, FaTrash, FaPencilAlt } from 'react-icons/fa';
 import AuthContext from '../context/AuthContext';
-import "./ProductCard.css"
+import "./ProductCard.css";
+import { useNavigate } from 'react-router-dom';
 
 
 function PostCard({ id, title, creator_id, description, image, likes, onLikeUpdate, onDelete }) {
     const { user, authTokens, logoutUser } = useContext(AuthContext);
     const [likeCount, setLikeCount] = useState(likes);
-
-    console.log(title, user.user_id, " ", creator_id);
+    const navigate = useNavigate();
 
     const LikePost = async () => {
         let response = await fetch(`http://localhost:8000/api/like_post/${user.user_id}/${id}`, {
@@ -25,28 +25,13 @@ function PostCard({ id, title, creator_id, description, image, likes, onLikeUpda
         if (response.status === 200) {
             setLikeCount(data.likes);
             onLikeUpdate(id, data.likes);
-            console.log("Item liked");
         } else if (response.status === 401) {
             logoutUser();
         }
     };
 
     const updatePost = async () => {
-        let response = await fetch(`http://localhost:8000/api/like_post/${user.user_id}/${id}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': "application/json",
-                'Authorization': 'Bearer ' + String(authTokens.access)
-            }
-        });
-        let data = await response.json();
-        if (response.status === 200) {
-            setLikeCount(data.likes);
-            onLikeUpdate(id, data.likes);
-            console.log("Item updated");
-        } else if (response.status === 401) {
-            logoutUser();
-        }
+        navigate(`/edit_post/${id}`);
     };
 
     const deletePost = async() => {

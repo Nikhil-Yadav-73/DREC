@@ -28,6 +28,7 @@ urlpatterns = [
     path('delete_post/<int:pk>', views.deletePost.as_view()),
     path('update_post/<int:pk>', views.updatePost.as_view()),
     path('edit_profile/<int:pk>', views.EditProfile.as_view()),
+    path("edit_post/<int:id>", views.EditPost.as_view()),
 
     path('notes', views.getnotes),
 ]

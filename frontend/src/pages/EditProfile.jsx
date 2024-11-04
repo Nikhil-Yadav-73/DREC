@@ -89,9 +89,7 @@ function EditProfile() {
         };
         formData.append('user_data', JSON.stringify(userData));
     
-        if (profile.pfp) {
-            formData.append('pfp', profile.pfp);
-        }
+        if (profile.pfp) formData.append('pfp', profile.pfp);
     
         let response = await fetch(`http://localhost:8000/api/userprofile/${user.user_id}`, {
             method: 'PUT',

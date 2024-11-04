@@ -20,7 +20,7 @@ const Posts = () => {
     };
 
     const handleDeletePost = (postId) => {
-        setPosts(posts.filter(post => post.id !== postId)); // Remove the deleted post
+        setPosts(posts.filter(post => post.id !== postId));
     };
 
     useEffect(() => {
@@ -38,18 +38,16 @@ const Posts = () => {
             });
 
             let data = await response.json();
-            console.log("Full API response:", data);
 
             if (response.ok) {
-                // The data should now contain 'count' and 'results'
                 if (data.results && Array.isArray(data.results)) {
                     setPosts(data.results);
                     console.log("Posts set:", data.results);
-                    setTotalPages(Math.ceil(data.count / 12)); // Update totalPages based on count
+                    setTotalPages(Math.ceil(data.count / 12));
                 } else {
                     console.error("Expected data to have 'results' as an array, but got:", data);
                     setPosts([]);
-                    setTotalPages(1); // Reset totalPages if data is invalid
+                    setTotalPages(1);
                 }
             } else {
                 if (response.status === 401) {
