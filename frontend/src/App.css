@@ -52,3 +52,19 @@
   margin-bottom: 3px;
   text-align: center;
 }
+
+.logout-btn {
+  color: red;
+  margin-bottom: -2px;
+}
+
+.logout-btn:hover {
+  background-color: red;
+  border: solid;
+  color: white;
+}
+
+.regular-btn:hover {
+  color: white !important;
+  background-color: navy !important;
+}

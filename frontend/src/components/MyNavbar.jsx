@@ -95,14 +95,14 @@ function MyNavbar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="posts" className='tw'>Posts</Nav.Link>
-            <NavDropdown title="Options" className='tw' id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3" >{user ? (<p onClick={logoutUser}>Logout</p>) : (<Link to="/login">Login</Link>)}</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">
-                Another action
-              </NavDropdown.Item>
+            <Nav.Link href="/posts" className='tw'>Posts</Nav.Link>
+            <NavDropdown title="Options" className='tw ddwn' id="navbarScrollingDropdown">
+              <NavDropdown.Item href="#" >{user ? (<p className='logout-btn' onClick={logoutUser}>Logout</p>) : (<Link to="/login">Login</Link>)}</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="posts">
+              <NavDropdown.Item href="/cart" className='regular-btn'>
+                Cart
+              </NavDropdown.Item>
+              <NavDropdown.Item href="/posts" className='regular-btn'>
                 Posts
               </NavDropdown.Item>
             </NavDropdown>
