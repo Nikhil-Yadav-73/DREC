@@ -284,6 +284,11 @@ class Signup(generics.CreateAPIView):
             user = serializer.save()
             user.set_password(serializer.validated_data['password'])
             user.save()
+            userprofile = UserProfile.objects.create(
+                name = user.username,
+                user=user
+            )
+            userprofile.save()
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
