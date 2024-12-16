@@ -15,9 +15,7 @@ export const AuthProvider = ({ children }) => {
     });
 
     const [user, setUser] = useState(() => {
-        if (authTokens) {
-            return jwtDecode(authTokens.access);
-        }
+        if (authTokens) return jwtDecode(authTokens.access);
         return null;
     });
 
