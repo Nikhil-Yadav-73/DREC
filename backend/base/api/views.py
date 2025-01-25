@@ -107,7 +107,7 @@ class CategoryItemListView(generics.ListAPIView):
             serializer = self.get_serializer(items, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Category.DoesNotExist:
-            raise NotFound(detail="Item not found", code=status.HTTP_404_NOT_FOUND)
+            raise NotFound(detail="Category items not found", code=status.HTTP_404_NOT_FOUND)
  
 class CartView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
